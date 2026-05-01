@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>المرجع السريع - بطاقات الملاحظة الصفية (صفحة واحدة)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Segoe UI', 'Tahoma', sans-serif;
+            background: white;
+            padding: 15px;
+        }
+
+        /* حاوية الصفحة - عرض A4 أفقي */
+        .page {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* رأس الصفحة */
+        .main-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1e3c72;
+        }
+
+        .main-header h1 {
+            font-size: 22px;
+            color: #1a3a5c;
+            margin-bottom: 5px;
+        }
+
+        .main-header p {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .header-badge {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .badge {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .badge-blue { background: #1e3c72; color: white; }
+        .badge-green { background: #2d6a4f; color: white; }
+
+        /* شبكة البطاقات - مكثفة لتناسب صفحة واحدة */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* البطاقة بشكل مضغوط */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .card-header {
+            padding: 8px 12px;
+            color: white;
+        }
+        .card-header.blue { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+        .card-header.green { background: linear-gradient(135deg, #1b5e3a, #2e8b57); }
+
+        .indicator-code {
+            font-size: 9px;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+        }
+        .indicator-title {
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .section {
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-right: 2px solid;
+            padding-right: 8px;
+        }
+        .section-title.blue-text { color: #1e3c72; border-right-color: #1e3c72; }
+        .section-title.purple-text { color: #6f42c1; border-right-color: #6f42c1; }
+        .section-title.orange-text { color: #e67e22; border-right-color: #e67e22; }
+
+        .evidence-list, .measure-list {
+            list-style: none;
+        }
+        .evidence-list li, .measure-list li {
+            font-size: 9px;
+            padding: 3px 0 3px 8px;
+            position: relative;
+            border-bottom: 1px dashed #e9ecef;
+            line-height: 1.3;
+        }
+        .evidence-list li:last-child, .measure-list li:last-child {
+            border-bottom: none;
+        }
+        .evidence-list li::before {
+            content: "●";
+            position: absolute;
+            right: -4px;
+            color: #1e3c72;
+            font-size: 7px;
+        }
+        .measure-list li::before {
+            content: "▸";
+            position: absolute;
+            right: -4px;
+            color: #e67e22;
+            font-size: 8px;
+        }
+
+        .impact-text {
+            font-size: 9px;
+            line-height: 1.4;
+            color: #2c3e50;
+        }
+
+        .quick-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px dotted #dee2e6;
+        }
+        .rating-label {
+            font-size: 9px;
+            font-weight: bold;
+            color: #6c757d;
+        }
+        .rating-stars {
+            display: flex;
+            gap: 5px;
+        }
+        .rating-stars span {
+            width: 22px;
+            height: 22px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            border: 1px solid #dee2e6;
+        }
+
+        .notes-field {
+            margin-top: 8px;
+        }
+        .notes-label {
+            font-size: 8px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+        .notes-line {
+            background: #f8f9fa;
+            height: 20px;
+            border-radius: 6px;
+            border: 1px dashed #dee2e6;
+        }
+
+        /* تذييل البطاقات الصغير */
+        .card-footer {
+            background: #f1f3f5;
+            padding: 4px 8px;
+            font-size: 7px;
+            text-align: center;
+            color: #868e96;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* قسم التوقيعات في أسفل الصفحة */
+        .signatures-section {
+            margin-top: 15px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .signatures-header {
+            background: linear-gradient(135deg, #1a3a5c, #2d6a4f);
+            padding: 8px 15px;
+        }
+        .signatures-header h3 {
+            font-size: 13px;
+            color: white;
+        }
+        .signatures-body {
+            padding: 12px;
+        }
+        .signatures-grid {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+        .signature-card {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        .signature-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1a3a5c;
+        }
+        .signature-title {
+            font-size: 9px;
+            color: #6c757d;
+        }
+        .signature-line {
+            border-top: 1px solid #dee2e6;
+            margin-top: 6px;
+            padding-top: 5px;
+            font-size: 9px;
+        }
+        .school-footer {
+            text-align: center;
+            font-size: 9px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed #dee2e6;
+            color: #6c757d;
+        }
+
+        /* طباعة بصفحة A4 أفقية (Landscape) */
+        @media print {
+            body {
+                padding: 0.5cm;
+                margin: 0;
+            }
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .card, .signatures-section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 0.8cm;
+            }
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- رأس الصفحة -->
+    <div class="main-header">
+        <h1>📋 المرجع السريع – بطاقات الملاحظة الصفية</h1>
+        <p>مجال التعليم والتعلم | بناء خبرات التعلم + تقويم التعلم</p>
+        <div class="header-badge">
+            <span class="badge badge-blue">🔵 المجال الأول: 10 مؤشرات</span>
+            <span class="badge badge-green">🟢 المجال الثاني: مؤشران</span>
+        </div>
+    </div>
+
+    <!-- شبكة البطاقات (3 أعمدة × 4 صفوف = 12 بطاقة في صفحة واحدة) -->
+    <div class="cards-grid">
+
+        <!-- بطاقة 1 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-1</span><div class="indicator-title">فرص متكافئة للتعلم</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>3+ مصادر تعلم مرئية (كتاب، مجسم، فيديو)</li><li>طالب من ذوي الإعاقة يستخدم أداة مكيفة</li><li>طالب موهوب يقدم مهمة إثرائية مختلفة</li><li>جميع الطلاب يشاركون في النشاط</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">زيادة مشاركة جميع الطلاب بغض النظر عن قدراتهم</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>عدد المشاركين من كل فئة قبل/بعد</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 2 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-2</span><div class="indicator-title">تنفيذ المناهج حسب الخطة</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>الدرس الحالي مطابق للخطة الزمنية</li><li>المعلم يذكر رقم الدرس من الخطة</li><li>الأسبوع الماضي تم إكمال المخطط</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">اكتمال المقرر وعدم وجود فجوات تعلم</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>مقارنة الخطة مع ما تم تدريسه</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 3 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-3</span><div class="indicator-title">تنوع استراتيجيات التدريس</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>تغيير أسلوب التدريس 3+ مرات في الحصة</li><li>الطلاب يتحركون أو يعيدون ترتيب جلوسهم</li><li>المعلم يعطي وقتًا للتفكير قبل الإجابة</li><li>استخدام وسيلة حقيقية يلمسها الطلاب</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">زيادة تركيز الطلاب واستيعابهم</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>عدد المنتبهين بعد كل تغيير</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 4 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-4</span><div class="indicator-title">تفعيل التعلم الإلكتروني</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>الطالب يجيب عبر منصة أو جهاز لوحي</li><li>المعلم يعرض محاكاة تفاعلية</li><li>الطالب يبحث في الإنترنت ويكتب في دفتره</li><li>المعلم يحيل إلى رابط تعليمي</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">تنمية المهارات الرقمية والتعلم الذاتي</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>عدد الطلاب الذين فتحوا الرابط</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 5 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-5</span><div class="indicator-title">أنشطة مرتبطة بحياة المتعلمين</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>مثال من بيئة الطالب (أسعار، مصروف)</li><li>تطبيق قاعدة رياضية من المنزل</li><li>تجربة علمية بأدوات منزلية</li><li>كتابة جملة عن حدث يومي</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">ترسيخ التعلم وتطبيقه خارج المدرسة</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>سؤال: أين تستخدم هذا في حياتك؟</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 6 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-6</span><div class="indicator-title">المهارات القرائية والعددية</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>الطالب يقرأ فقرة بصوت مرتفع</li><li>يكتب ملخصًا قصيرًا (3-4 أسطر)</li><li>يجري عملية حسابية على السبورة</li><li>يحل مسألة عددية من واقع الحياة</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">تحسن القراءة والكتابة والحساب</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>مقارنة الأداء مع بداية الفصل</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 7 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-7</span><div class="indicator-title">تنمية مهارات التفكير العليا</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>سؤال مفتوح له أكثر من إجابة</li><li>يذكر سببين لموقف معين</li><li>يقارن بين شيئين ويذكر الفرق</li><li>يقترح حلين مختلفين لمشكلة</li><li>يصمم فكرة جديدة خارج الكتاب</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">قدرة على التحليل والنقد وحل المشكلات</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>تحليل إجابة السؤال المفتوح</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 8 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-8</span><div class="indicator-title">المهارات العاطفية والاجتماعية</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>الطالب يستأذن قبل الكلام</li><li>يمدح زميله أو يشكره</li><li>عند الخلاف يطلب المساعدة</li><li>جميع أعضاء المجموعة يتحدثون</li><li>يعتذر إذا أخطأ</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">تحسن العلاقات وبيئة صفية آمنة</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>عدد مرات الصراع أو المقاطعة</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 9 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-9</span><div class="indicator-title">تنمية المهارات الرقمية</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>يستخدم محرك بحث للإجابة</li><li>يفتح رابطًا ويكتبه بنفسه</li><li>يكتب نصًا على لوحة المفاتيح</li><li>يذكر مصدرًا إلكترونيًا موثوقًا</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">إتقان البحث الرقمي والاستخدام الآمن</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>قدرته على كتابة رابط والوصول</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 10 -->
+        <div class="card"><div class="card-header blue"><span class="indicator-code">📌 2-1-1-10</span><div class="indicator-title">تعزيز دافعية المتعلمين</div></div><div class="card-body"><div class="section"><div class="section-title blue-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>أكثر من نصف الطلاب يرفعون أيديهم</li><li>يطرح سؤالاً إضافيًا</li><li>يضحك أو يظهر فرحًا أثناء النشاط</li><li>يطلب الإجابة مرة أخرى</li><li>يكمل النشاط في البيت</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">إقبال على التعلم ومبادرة ذاتية</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>عدد المشاركين طواعية أول 5 دقائق</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 11 (تقويم) -->
+        <div class="card"><div class="card-header green"><span class="indicator-code">📌 2-2-1-1</span><div class="indicator-title">أساليب تقويم متنوعة</div></div><div class="card-body"><div class="section"><div class="section-title green-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>بداية الدرس: سؤال سريع (تقويم قبلي)</li><li>أثناء الشرح: نشاط قصير (تكويني)</li><li>نهاية الدرس: سؤال أو مشكلة (ختامي)</li><li>استخدام أكثر من أداة (شفهية، ورقة عمل)</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">معرفة نقاط القوة والضعف وتحسين الأداء</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>مقارنة إجابات القبلي والختامي</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+        <!-- بطاقة 12 (تقويم) -->
+        <div class="card"><div class="card-header green"><span class="indicator-code">📌 2-2-1-3</span><div class="indicator-title">تغذية راجعة منتظمة</div></div><div class="card-body"><div class="section"><div class="section-title green-text">🔍 الشواهد الملموسة</div><ul class="evidence-list"><li>يقول جملة محددة: "إجابتك صحيحة لكن انتبه لعلامة الترقيم"</li><li>الطالب يصحح خطأه مباشرة</li><li>يغير إجابته في الكراسة بعد تعليق المعلم</li><li>يكتب المعلم ملاحظة قصيرة للتحسين</li></ul></div><div class="section"><div class="section-title purple-text">✨ الأثر</div><div class="impact-text">تصحيح الأخطاء وتحسين الأداء المستمر</div></div><div class="section"><div class="section-title orange-text">📊 قياس الأثر</div><ul class="measure-list"><li>نسبة الأخطاء التي تم تصحيحها</li></ul></div><div class="quick-rating"><span class="rating-label">التقييم:</span><div class="rating-stars"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="notes-field"><div class="notes-label">📝 ملاحظات:</div><div class="notes-line"></div></div></div><div class="card-footer">مرجع سريع – ملاحظة صفية</div></div>
+
+    </div>
+
+    <!-- قسم التوقيعات في نفس الصفحة -->
+    <div class="signatures-section">
+        <div class="signatures-header"><h3>📋 اعتماد فريق التقويم الداخلي</h3></div>
+        <div class="signatures-body">
+            <div class="signatures-grid">
+                <div class="signature-card"><div class="signature-name">سليمان السحيم</div><div class="signature-title">عضو التقويم الداخلي</div><div class="signature-line">التوقيع: _________________</div></div>
+                <div class="signature-card"><div class="signature-name">خالد البدراني</div><div class="signature-title">منسق التميز</div><div class="signature-line">التوقيع: _________________</div></div>
+                <div class="signature-card"><div class="signature-name">هاني رضوان الددجان</div><div class="signature-title">مدير المدرسة</div><div class="signature-line">التوقيع: _________________</div></div>
+            </div>
+            <div class="school-footer">📅 التاريخ: ____ / ____ / 1446 هـ &nbsp;&nbsp;|&nbsp;&nbsp; 🏫 ختم المدرسة: _________________</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
